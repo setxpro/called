@@ -1,15 +1,37 @@
-import * as React from 'react';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import * as React from "react";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 
-export default function AddressForm() {
+interface Props {
+  name: string;
+  setName: React.Dispatch<React.SetStateAction<string>>;
+  middleName: string;
+  setMiddlename: React.Dispatch<React.SetStateAction<string>>;
+  email: string;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
+  phone: string;
+  setPhone: React.Dispatch<React.SetStateAction<string>>;
+  assignments: string;
+  setAssignments: React.Dispatch<React.SetStateAction<string>>;
+}
+
+export default function AddressForm({
+  name,
+  setName,
+  middleName,
+  setMiddlename,
+  email,
+  setEmail,
+  assignments,
+  setPhone,
+  phone,
+  setAssignments
+}: Props) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Shipping address
+        Usuário
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -17,10 +39,11 @@ export default function AddressForm() {
             required
             id="firstName"
             name="firstName"
-            label="First name"
+            label="Nome"
             fullWidth
-            autoComplete="given-name"
             variant="standard"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -28,79 +51,46 @@ export default function AddressForm() {
             required
             id="lastName"
             name="lastName"
-            label="Last name"
+            label="Sobrenome"
             fullWidth
-            autoComplete="family-name"
             variant="standard"
+            value={middleName}
+            onChange={(e) => setMiddlename(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             required
-            id="address1"
-            name="address1"
-            label="Address line 1"
+            id="email"
+            name="email"
+            label="E-mail"
             fullWidth
-            autoComplete="shipping address-line1"
             variant="standard"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
-            id="address2"
-            name="address2"
-            label="Address line 2"
-            fullWidth
-            autoComplete="shipping address-line2"
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="city"
-            name="city"
-            label="City"
-            fullWidth
-            autoComplete="shipping address-level2"
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            id="state"
-            name="state"
-            label="State/Province/Region"
+            id="assignment"
+            name="assignment"
+            label="Atribuição"
             fullWidth
             variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="zip"
-            name="zip"
-            label="Zip / Postal code"
-            fullWidth
-            autoComplete="shipping postal-code"
-            variant="standard"
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="country"
-            name="country"
-            label="Country"
-            fullWidth
-            autoComplete="shipping country"
-            variant="standard"
+            value={assignments}
+            onChange={(e) => setAssignments(e.target.value)}
           />
         </Grid>
         <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
+          <TextField
+            required
+            id="phone"
+            name="phone"
+            label="Telefone"
+            fullWidth
+            variant="standard"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
           />
         </Grid>
       </Grid>

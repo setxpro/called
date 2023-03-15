@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import * as C from "./styles";
 import MessageIcon from "@mui/icons-material/Message";
-import axios from "axios";
 import { ChatType } from "../../../Types/ChatType";
 import { useApi } from "../../../Hooks/useApi";
 import { User } from "../../../Types/UserTypes";
@@ -15,9 +14,13 @@ import { MessageType } from "../../../Types/MessageTypes";
 import TimeAgo from "timeago-react";
 import { AuthContext } from "../../../Contexts/Auth";
 
-import PhotoIcon from '@mui/icons-material/Photo';
-import CloseIcon from '@mui/icons-material/Close';
-import SendIcon from '@mui/icons-material/Send';
+import PhotoIcon from "@mui/icons-material/Photo";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import { toast } from "react-toastify";
 
 interface Props {
   chat: ChatType;
@@ -36,7 +39,7 @@ const ChatBox = ({
   receivedMessage,
   selectedChat,
   setSelectedChat,
-  removeMessage
+  removeMessage,
 }: Props) => {
   const { user } = useContext(AuthContext);
   const scroll: any = useRef();
@@ -52,7 +55,10 @@ const ChatBox = ({
   const [imageSelected, setImageSelected] = useState("");
 
   // Convert Image to BASE64
-  function readB64Img(file: File, cb: (prop: string | ArrayBuffer | null) => void) {
+  function readB64Img(
+    file: File,
+    cb: (prop: string | ArrayBuffer | null) => void
+  ) {
     var reader = new FileReader();
 
     reader.onloadend = (e) => {
@@ -64,11 +70,10 @@ const ChatBox = ({
   }
 
   const convertImage = () => {
-    readB64Img(image as File, (base64) => setImageSelected(`${base64}`))
-  }
+    readB64Img(image as File, (base64) => setImageSelected(`${base64}`));
+  };
 
   // END IMAGE
-
 
   // Fetching data for header
   useEffect(() => {
@@ -135,12 +140,13 @@ const ChatBox = ({
 
   useEffect(() => {
     if (image) {
-      convertImage()
+      convertImage();
     }
+  }, [image]);
 
-  }, [image])
-
-  const sendImage = async (e: React.MouseEvent<HTMLDivElement, MouseEvent> | any) => {
+  const sendImage = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent> | any
+  ) => {
     e.preventDefault();
     let senderId = currentUser;
     let chatId = chat._id;
@@ -159,7 +165,7 @@ const ChatBox = ({
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   // Receive Message from parent component
   useEffect(() => {
@@ -171,8 +177,6 @@ const ChatBox = ({
       Object.keys(receivedMessage).forEach((x: any) => {
         if (x == "data") {
           const rc = receivedMessage[x];
-
-          console.log("Message -> ", rc);
           setMessages([...messages, rc]);
         }
       });
@@ -196,10 +200,34 @@ const ChatBox = ({
       </C.ChatInactiveContainer>
     );
   }
+
+  function copyToClickBoard(txt: string) {
+    navigator.clipboard
+      .writeText(txt)
+      .then(() => {
+        toast("Texto copiado para área de transferência.");
+      })
+      .catch((err) => {
+        console.log("Something went wrong", err);
+      });
+  }
+
+
+  const deleteMessage = async (id:string) => {
+    removeMessage(id)
+    const data = await api.getMessages(`${chat._id}`);
+    return setMessages(data);
+  }
+
   return (
     <C.Container>
       <C.RightTop>
-        {selectedChat && <CloseIcon className="close-btn" onClick={() => setSelectedChat(false)}/>}
+        {selectedChat && (
+          <CloseIcon
+            className="close-btn"
+            onClick={() => setSelectedChat(false)}
+          />
+        )}
         <img src={userData?.avatar} alt="avatar" />
         <h3>
           {userData?.name} {userData?.middleName}
@@ -218,15 +246,58 @@ const ChatBox = ({
                   <img src={userData?.avatar} alt="avatar" />
                 )}
               </C.AreaAvatarUserChatItem>
-
+              <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                  <React.Fragment>
+                    <Button variant="contained" {...bindTrigger(popupState)}>
+                      ...
+                    </Button>
+                    <Menu {...bindMenu(popupState)} className="menu">
+                      {message?.text.startsWith("data:image") && (
+                        <a
+                          download="download.png"
+                          href={message.text}
+                          style={{ textDecoration: "none", color: "#333" }}
+                        >
+                          <MenuItem onClick={popupState.close}>
+                            Download da imagem
+                          </MenuItem>
+                        </a>
+                      )}
+                      {!message?.text.startsWith("data:image") && (
+                        <MenuItem
+                          onClick={() => [
+                            copyToClickBoard(message.text),
+                            popupState.close,
+                          ]}
+                        >
+                          Copiar
+                        </MenuItem>
+                      )}
+                      <MenuItem
+                        onClick={() => [
+                          ,
+                          deleteMessage(message._id),
+                          popupState.close,
+                        ]}
+                      >
+                        Excluir
+                      </MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                )}
+              </PopupState>
               <C.AreaRightChatItem>
-                <span className="message">{message?.text.startsWith("data:image") ? <img src={message.text} alt=""/> : message.text}</span>
+                <span className="message" id="textArea">
+                  {message?.text.startsWith("data:image") ? (
+                    <img src={message.text} alt="" />
+                  ) : (
+                    message.text
+                  )}
+                </span>
                 <span className="date">
                   <TimeAgo datetime={message?.createdAt} locale="pt_BR" />
                 </span>
-                <button onClick={() => removeMessage(message?._id)}>
-                  DEL
-                </button>
               </C.AreaRightChatItem>
 
               <C.AreaAvatarUserChatItem>
@@ -239,29 +310,33 @@ const ChatBox = ({
         ))}
       </C.ChatBoxArea>
       <C.ChatInputArea>
-            <input
-                type="text"
-                placeholder="Digite uma mensagem"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                onKeyUp={handleInputKeyUp}
-              />
-              <div className="area-add-image">
-                <PhotoIcon className="photo"/>
-                <input
-                  type="file"
-                  className="file"
-                  name="logo"
-                  accept="image/*"
-                  onChange={e => {
-                    let files = e.target.files;
-                    if (files?.length) {
-                      setImage(files[0])
-                    }
-                  }} 
-              />
-              </div>
-              {image ? <button onClick={sendImage}>SEND IMAGE</button> : <button>SEND</button>}
+        <input
+          type="text"
+          placeholder="Digite uma mensagem"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          onKeyUp={handleInputKeyUp}
+        />
+        <div className="area-add-image">
+          <PhotoIcon className="photo" />
+          <input
+            type="file"
+            className="file"
+            name="logo"
+            accept="image/*"
+            onChange={(e) => {
+              let files = e.target.files;
+              if (files?.length) {
+                setImage(files[0]);
+              }
+            }}
+          />
+        </div>
+        {image ? (
+          <button onClick={sendImage}>SEND IMAGE</button>
+        ) : (
+          <button>SEND</button>
+        )}
       </C.ChatInputArea>
     </C.Container>
   );

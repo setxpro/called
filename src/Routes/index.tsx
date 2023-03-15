@@ -10,12 +10,19 @@ import Support from "../Pages/Support";
 import Called from "../Pages/Called";
 import { AuthContext } from "../Contexts/Auth";
 import SLA from "../Pages/SLA";
+import { toast } from "react-toastify";
+import CreateUser from "../Pages/Register/CreateUser";
+import UpdateUser from "../Pages/Update/Users";
+import ForgetPassword from "../Pages/ForgetPassword";
 
 const InterceptorRoutes = ({ children }: { children: JSX.Element }) => {
   
   const { user } = useContext(AuthContext)
 
     if (!user) return <SignInSide/>;
+    if (!user.isApproved)  {
+      return <SignInSide/>
+    };
   
   return children;
 };
@@ -24,6 +31,8 @@ const RoutesApp: React.FC = () => {
   return (
     <Routes>
       <Route path="*" />
+      <Route path="/login" element={<SignInSide/>}/>
+      <Route path="/forget-password" element={<ForgetPassword/>}/>
       <Route path="/register-user" element={<Register/>}/>
       <Route
         path="/"
@@ -31,6 +40,26 @@ const RoutesApp: React.FC = () => {
           <InterceptorRoutes>
             <Layout>
               <Home />
+            </Layout>
+          </InterceptorRoutes>
+        }
+      />
+      <Route
+        path="/usuarios/create"
+        element={
+          <InterceptorRoutes>
+            <Layout>
+              <CreateUser />
+            </Layout>
+          </InterceptorRoutes>
+        }
+      />
+      <Route
+        path="/usuarios/update/:id"
+        element={
+          <InterceptorRoutes>
+            <Layout>
+              <UpdateUser />
             </Layout>
           </InterceptorRoutes>
         }

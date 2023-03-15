@@ -4,6 +4,8 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useStat
 type Props = {
     wrapperSidebar: boolean;
     setWrapperSidebar: Dispatch<SetStateAction<boolean>>;
+    wrapperSidebarSettings: boolean;
+    wrapperSettings: () => void;
 }
 
 export const SidebarContext = createContext({} as Props)
@@ -11,8 +13,11 @@ export const SidebarContext = createContext({} as Props)
 export const SidebarProvider = ({children}:{children: ReactNode}) => {
 
     const [wrapperSidebar, setWrapperSidebar] = useState(false);
+    const [wrapperSidebarSettings, setWrapperSidebarSettings] = useState(false);
 
-  return <SidebarContext.Provider value={{ setWrapperSidebar, wrapperSidebar }}>{children}</SidebarContext.Provider>;
+    const wrapperSettings = () => setWrapperSidebarSettings(!wrapperSidebarSettings);
+
+  return <SidebarContext.Provider value={{ setWrapperSidebar, wrapperSidebar, wrapperSidebarSettings, wrapperSettings }}>{children}</SidebarContext.Provider>;
 }
 
 export const useSidebar = () => {

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div<{wrapperSidebar:boolean}>`
     height: 60px;
-    background-color: #FFF;
+    background-color: ${props => props.theme.colors.header};
     transition: all .5s ease;
     width: ${props => props.wrapperSidebar ? '84%' : '95%'};
     position: fixed;
@@ -27,7 +27,7 @@ export const RightContainer = styled.div`
 export const NotifyArea = styled.div`
         .MuiSvgIcon-fontSizeMedium {
             font-size: 2em;
-            color: #7367F0;
+            color: #444ddd;
             cursor: pointer;
 
             @media (max-width: 884px) {
@@ -47,7 +47,8 @@ export const NotifyArea = styled.div`
             position: absolute;
             top: 4px;
             right: 5px;
-            border: 2px solid #FFF;
+            border: 2px solid ${props => props.theme.colors.header};
+            transition: all .5s ease;
         }
 
         cursor: pointer;
@@ -77,7 +78,8 @@ export const AvatarArea = styled.div`
         position: absolute;
         right: 0;
         bottom: 10px;
-        border: 2px solid #FFF;
+        transition: all .5s ease;
+        border: 2px solid ${props => props.theme.colors.header};
     }
 
 `;
@@ -90,7 +92,7 @@ export const ContentNameAndAvatar = styled.div`
 export const NameArea = styled.div`
     
     h2,h6 {
-        color: #333;
+        color: ${props => props.theme.colors.text};
     }
 
     h2 {

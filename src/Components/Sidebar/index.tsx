@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
 
     const { wrapperSidebar, setWrapperSidebar } = useSidebar()
     const { state, dispatch } = useRootMenu()
-    const { signOut } = useContext(AuthContext)
+    const { signOut, user } = useContext(AuthContext)
 
     return (
         <>
@@ -32,7 +32,8 @@ const Sidebar: React.FC = () => {
                 </C.SidebarTop>
                 <C.MenuArea wrapperSidebar={wrapperSidebar}>
                     <Link to="/" onClick={() => dispatch({type: 'home'})} className={state.home ? 'active' : ''}><HomeIcon/> <span>Home</span></Link>
-                    <Link to="/usuarios" onClick={() => dispatch({type: 'users'})} className={state.users ? 'active' : ''}><GroupIcon/> <span>Users</span></Link>
+                    {user?.role === "Developer" && <Link to="/usuarios" onClick={() => dispatch({type: 'users'})} className={state.users ? 'active' : ''}><GroupIcon/> <span>Users</span></Link> }
+                    {user?.role === "Admin" && <Link to="/usuarios" onClick={() => dispatch({type: 'users'})} className={state.users ? 'active' : ''}><GroupIcon/> <span>Users</span></Link> }
                     <Link to="/sla" onClick={() => dispatch({type: 'sla'})} className={state.sla ? 'active' : ''}><RuleIcon/> <span>SLA</span></Link>
                     <Link to="/chat" onClick={() => dispatch({type: 'chat'})} className={state.chat ? 'active' : ''}><ForumIcon/> <span>Chat</span></Link>
                     <Link to="/chamados" onClick={() => dispatch({type: 'chamados'})} className={state.chamados ? 'active' : ''}><SpeakerNotesIcon/> <span>Chamados</span></Link>

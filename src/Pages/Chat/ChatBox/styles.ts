@@ -8,12 +8,13 @@ export const Container = styled.div`
 
 export const RightTop = styled.div`
   height: 70px;
-  border-bottom: 1px solid #3333;
+  border-bottom: 1px solid ${props => props.theme.colors.borders};
   padding: 0 10px;
   display: flex;
   align-items: center;
   gap: 1rem;
 
+  color: ${props => props.theme.colors.text};
   .close-btn {
 
     display: none;
@@ -42,7 +43,7 @@ export const RightSide = styled.div`
 export const RightSideTop = styled.div`
   height: 70px;
   background-color: var(--color-secondary);
-  border-bottom: 1px solid #555;
+  border-bottom: 1px solid ${props => props.theme.colors.borders};
 
   display: flex;
   align-items: center;
@@ -51,7 +52,7 @@ export const RightSideTop = styled.div`
 `;
 export const RightChatArea = styled.div<{ mod: boolean }>`
   flex: 1;
-  border-right: 1px solid #555;
+  border-right: 1px solid ${props => props.theme.colors.borders};
   padding: 10px;
   background: #363a50;
 
@@ -71,7 +72,7 @@ export const RightChatArea = styled.div<{ mod: boolean }>`
 export const RightBottomArea = styled.div`
   height: 50px;
   background-color: var(--color-secondary);
-  border-top: 1px solid #555;
+  border-top: 1px solid ${props => props.theme.colors.borders};
 
   .chatWindow--emojiarea {
     height: 200px;
@@ -137,6 +138,12 @@ export const ChatBoxArea = styled.div`
   flex: 1;
   overflow-y: scroll;
   padding: 10px;
+  transition: .5s ease;
+  background-image: ${
+      props => props.theme.title === "light" 
+      ? `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMhJCLFbwoHPemfR1fVWCLbPydI6pK83Sowd6ku3Al8RWhTQX3PIik_Y3Nl5627hU7kFc&usqp=CAU')` 
+      : `url('https://i.pinimg.com/originals/0f/a8/d5/0fa8d5f32c5101a85351665b753ee7f0.jpg')`
+    };
   ::-webkit-scrollbar {
     display: none;
   }
@@ -156,6 +163,15 @@ export const ChatItem = styled.div<{ userSend: boolean }>`
   border-radius: 15px;
   position: relative;
   margin-bottom: 10px;
+
+  .MuiButtonBase-root {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+  }
 
   .message {
     color: #f8f7fe;
@@ -180,6 +196,8 @@ export const ChatItem = styled.div<{ userSend: boolean }>`
 export const AreaRightChatItem = styled.div`
   display: flex;
   flex-direction: column;
+
+
 `;
 
 export const AreaAvatarUserChatItem = styled.div`
@@ -191,7 +209,7 @@ export const AreaAvatarUserChatItem = styled.div`
 
 export const ChatInputArea = styled.div`
   height: 60px;
-  border-top: 1px solid #3333;
+  border-top: 1px solid ${props => props.theme.colors.borders};
 
   display: flex;
   align-items: center;
@@ -204,7 +222,9 @@ export const ChatInputArea = styled.div`
     padding: 0.5rem;
     font-size: 1.3em;
     outline: none;
-    border: 1px solid #3333;
+    border: 1px solid ${props => props.theme.colors.borders};
+    color: ${props => props.theme.colors.text};
+    background: transparent;
     border-radius: 8px;
   }
   .area-add-image {

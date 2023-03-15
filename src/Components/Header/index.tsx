@@ -8,10 +8,9 @@ import { useContext } from 'react';
 import { AuthContext } from '../../Contexts/Auth';
 const Header: React.FC = () => {
 
-    const { wrapperSidebar, setWrapperSidebar } = useSidebar()
+    const { wrapperSidebar, setWrapperSidebar, wrapperSettings } = useSidebar()
     const { user } = useContext(AuthContext)
     const [userImageUri, setUserImageUri] = useState("");
-
     const addDefaultSrc = (ev: any) => {
         setUserImageUri(
           `https://ui-avatars.com/api/?name=${user?.name}+${user?.middleName}`
@@ -34,7 +33,7 @@ const Header: React.FC = () => {
            </C.LeftContainer>
             <C.RightContainer>
                 <C.NotifyArea><NotificationsIcon/></C.NotifyArea>
-                <C.ContentNameAndAvatar>
+                <C.ContentNameAndAvatar onClick={wrapperSettings}>
                     <C.NameArea>
                         <h2>{user?.name} {user?.middleName}</h2>
                         <h6>{user?.role}</h6>

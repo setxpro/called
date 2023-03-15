@@ -10,6 +10,7 @@ const AuthProvider = ({children}:{children:ReactNode}) => {
     const api = useApi();
     const [user, setUser] = useState<User | null>(null);
     const [onlineUsers, setOnlineUsers] = useState([]);
+    const [loadChat, setLoadChat] = useState(false);
 
     const socket: React.MutableRefObject<any> = useRef();
     
@@ -19,9 +20,17 @@ const AuthProvider = ({children}:{children:ReactNode}) => {
             const data = await api.signIgn(login, password)
 
             if(data.user) {
-                setUser(data.user)
-                stUserInStorageData(data.user)
-                toast.success(`Seja bem-vindo(a), ${data.user.name} ${data.user.middleName}`)
+                
+
+                if (data.user.isApproved) {
+                    setUser(data.user)
+                    stUserInStorageData(data.user)
+                    toast.success(`Seja bem-vindo(a), ${data.user.name} ${data.user.middleName}`)
+                }
+                else {
+                  toast.warning(`Sua solicitação permanece em espera!`)
+                }
+
                 return true;
             }
 
@@ -63,7 +72,8 @@ const AuthProvider = ({children}:{children:ReactNode}) => {
     // Cheack users online
 
     return (
-        <AuthContext.Provider value={{user, signIn, signOut, onlineUsers, socket}}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{user, signIn, signOut, onlineUsers, socket, loadChat,
+            setLoadChat}}>{children}</AuthContext.Provider>
     );
 }
 

@@ -10,6 +10,7 @@ export type User = {
     role: string;
     avatar: string;
     token: string;
+    isApproved: boolean;
 }
 
 export type AuthTypes = {
@@ -18,4 +19,6 @@ export type AuthTypes = {
     signOut: () => void;
     onlineUsers: never[];
     socket: React.MutableRefObject<any>;
+    setLoadChat: React.Dispatch<React.SetStateAction<boolean>>;
+    loadChat: boolean;
 }

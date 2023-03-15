@@ -6,16 +6,20 @@ import SearchIcon from '@mui/icons-material/Search';
 import ChatListItem from './ChatListItem';
 import { useApi } from '../../Hooks/useApi';
 import ChatBox from './ChatBox';
+import Contact from './Contacts';
+import axios from 'axios';
 
 const Chat = () => {
   const api = useApi();
-  const { socket, onlineUsers, user } = useContext(AuthContext)
+  const { socket, onlineUsers, user, loadChat, setLoadChat } = useContext(AuthContext)
   const [chats, setChats] = useState<ChatType[]>([]);
   const [currentChat, setCurrentChat] = useState<ChatType>(null!);
   const [sendMessage, setSendMessage] = useState<any>(null!);
   const [receivedMessage, setReceivedMessage] = useState<any>(null!);
-
   const [selectedChat, setSelectedChat] = useState(false);
+
+  const [search, setSearch] = useState("");
+
 
   // Send Message to socket server
   useEffect(() => {
@@ -40,6 +44,20 @@ const Chat = () => {
   };
 
 
+
+  const createChat = async (id: string) => {
+    const { data } = await axios.post('http://localhost:3333/api/chat', {
+        senderId: user?._id,
+        receiverId: id,
+    })
+    setSearch("")
+    // load
+    const lChats = await api.userChats(`${user?._id}`);
+    setChats(lChats);
+
+    return data;
+  }
+
    // Get the chat in chat section
    useEffect(() => {
     (async () => {
@@ -56,20 +74,31 @@ const Chat = () => {
     socket.current.emit('remove-message', id);
   }
 
+
+
   return (
     <C.Container>
         <C.LeftSide selectedChat={selectedChat}>
           <C.LeftTop>
             <img src={user?.avatar} alt="avatar"/>
-            <div className='area-input'><input type="text" name="search" placeholder="Search..." /> <SearchIcon/></div>
+            <div className='area-input'><input type="text" name="search" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)}/> <SearchIcon/></div>
           </C.LeftTop>
           <C.LeftChatsArea>
+          <C.TitleContacts>
+              <h6>Chats</h6>
+            </C.TitleContacts>
             {chats.map((chat, index) => (
-              <div onClick={() => [setCurrentChat(chat), setSelectedChat(!selectedChat)]} key={index}>
-                <ChatListItem data={chat} currentUserId={user?._id as string} online={checkOnlineStatus(chat)}/>
-              </div>
+                <div onClick={() => [setCurrentChat(chat), setSelectedChat(!selectedChat)]} key={index}>
+                  <ChatListItem data={chat} currentUserId={user?._id as string} online={checkOnlineStatus(chat)}/>
+                </div>
             ))}
           </C.LeftChatsArea>
+          <C.ListContact>
+            <C.TitleChatList>
+              <h6>Contatos</h6>
+            </C.TitleChatList>
+              <Contact createChat={createChat} search={search}/>
+          </C.ListContact>
         </C.LeftSide>
         <C.RightSide selectedChat={selectedChat}>
           <ChatBox

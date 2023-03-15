@@ -14,7 +14,7 @@ export const Container = styled.div`
     gap: 0.5em;
     padding: 0 10px;
 `;
-export const ContentAvatarArea = styled.div<{ online: boolean }>`
+export const ContentAvatarArea = styled.div`
 
     position: relative;
 
@@ -22,19 +22,6 @@ export const ContentAvatarArea = styled.div<{ online: boolean }>`
         height: 50px;
         width: 50px;
         border-radius: 50%;
-    }
-
-    &::after {
-        content: "";
-        background: ${props => props.online ? "yellowgreen" : "red"};
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-        transition: all .5s ease;
-        border: 3px solid ${props => props.theme.colors.main};
     }
 `;
 
@@ -47,11 +34,10 @@ export const NameArea = styled.div`
     h3 {
         font-size: 1.2em;
         font-weight: 500;
-        color: ${props => props.theme.colors.text};
-        
+        color: var(--color-text);
     }
 
     span {
-        color: #888;
+        color: #555;
     }
 `;

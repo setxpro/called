@@ -1,7 +1,37 @@
 import styled from 'styled-components';
+import { capitalize } from './../../../../server/src/Utils/CaptalizeText';
 
 export const Container = styled.div`
     height: 100%;
+
+    tr {
+
+        th {
+            border: 0;
+            :nth-child(1) {
+                display: flex;
+                align-items: center;
+                gap: .5rem;
+
+                img {
+                    border-radius: 50%;
+                }
+            }
+
+        }
+
+        :nth-child(even) {
+            background: #5555;
+        }
+    }
+
+    .css-1dydcym-MuiTableCell-root {
+        border: 0;
+    }
+
+    .name-area {
+        text-transform: capitalize;
+    }
 `;
 export const ContentTitle = styled.div`
     height: 10%;
@@ -28,7 +58,6 @@ export const FieldInput = styled.input`
 `;
 export const ContainerTable = styled.div`
     height: 90%;
-
     .css-og52vs-MuiTableCell-root.MuiTableCell-head {
         transition: .5s ease;
         background: ${props => props.theme.colors.tableTh};
@@ -57,5 +86,29 @@ export const ContainerTable = styled.div`
             border-radius: .5rem;
         }
        
+    }
+`;
+
+export const ImageAvatar = styled.div<{isOnline: boolean}>`
+
+    position: relative;
+
+    img {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+    }
+
+    &::after {
+        content: "";
+        background: ${props => props.isOnline ? "yellowgreen" : "red"};
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        transition: all .5s ease;
+        border: 3px solid ${props => props.theme.colors.main};
     }
 `;

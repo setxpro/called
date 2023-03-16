@@ -8,7 +8,7 @@ export const Container = styled.div<{wrapper: boolean}>`
 
   overflow: hidden;
 
-  width: ${props => props.wrapper ? '0' : '50%'};
+  width: ${props => props.wrapper ? '50%' : '0'};
 
   transition: .5s ease;
 
@@ -77,7 +77,7 @@ export const ContainerBlur = styled.div<{wrapper: boolean}>`
 
     background: rgba(0, 0, 0, 0.5);
 
-    display: ${props => props.wrapper ? 'none' : 'inline' };
+    display: ${props => props.wrapper ? 'inline' : 'none' };
 
     z-index: 99;
 

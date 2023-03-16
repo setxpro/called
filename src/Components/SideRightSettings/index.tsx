@@ -7,8 +7,7 @@ import AlterPassword from '../../Pages/Settings/AlterPassword';
 import EditUser from '../../Pages/Settings/EditUser';
 import ToggleTheme from '../../Pages/Settings/ToggleTheme';
 import { useSidebar } from '../../Contexts/SidebarContext';
-import { useContext } from 'react';
-import { GetThemeContext } from '../../Contexts/Theme';
+import EditAvatar from '../../Pages/Settings/EditAvatar';
 
 
 const SideRightSettings = () => {
@@ -32,6 +31,7 @@ const SideRightSettings = () => {
         </C.CurrentTopMenus>
         <C.ContentPages>
             {state.theme && <ToggleTheme/>}
+            {state.avatar && <EditAvatar/>}
             {state.users && <EditUser/>}
             {state.password && <AlterPassword/>}
         </C.ContentPages>

@@ -68,14 +68,14 @@ export default function UpdateUser() {
   }, [id])
 
   return (
-    <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
+    <Container component="main" maxWidth="sm" sx={{ mb: 4}}>
       <Paper
         variant="outlined"
         sx={{ my: { xs: 3, md: 6 }, p: { xs: 2, md: 3 } }}
       >
         <React.Fragment>
           <Typography variant="h6" gutterBottom>
-            Atualizar Senha
+            Atualizar Usuário
           </Typography>
             <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>

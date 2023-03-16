@@ -7,7 +7,8 @@ export const Container = styled.div<{wrapperSidebar: boolean}>`
     top: 0;
     bottom: 0;
     left: 0;
-    background: #0F5A41;
+    transition: .5s ease;
+    background: ${props => props.theme.colors.sidebar};
     z-index: 2;
     overflow: hidden;
 

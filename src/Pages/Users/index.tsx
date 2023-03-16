@@ -15,6 +15,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { toast } from 'react-toastify';
+import { AuthContext } from "../../Contexts/Auth";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -23,6 +24,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    
   },
 }));
 
@@ -33,23 +35,37 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   // hide last border
   '&:last-child td, &:last-child th': {
     border: 0,
+    
   },
+
+  '& .td': {
+    display: "flex", 
+    flexDirection: "row", 
+    gap: "1rem", 
+    alignItems: "center"
+  }
 }));
 
+
+interface Props {
+  userId: string;
+}
 
 const Users: React.FC = () => {
 
   const [users, setUsers] = React.useState<User[]>([])
   const [search, setSearch] = React.useState("")
   const navigate = useNavigate()
+  const [onlineU, setOnlineU] = React.useState<Props[]>([])
+  const { onlineUsers } = React.useContext(AuthContext)
 
   React.useEffect(() => {
 
     (async () => {
       const { data } = await axios.get('http://localhost:3333/api/user/find-all-users');
       setUsers(data.users);
+      setOnlineU(onlineUsers)
     })()
-
   }, [])
 
 
@@ -68,10 +84,35 @@ const Users: React.FC = () => {
     toast("Ação abortada com sucesso!")
   }
 
+
+
+  const usersArr: any = [];
+
+  onlineU.forEach(el => {
+    if (el.userId !== null) {
+      usersArr.push({
+        id: el.userId
+      })
+    }
+
+  })
+
+  function compareIds(id: string) {
+
+    for(let i = 0; i < usersArr.length; i++) {
+      if (`${usersArr[i].id === id}`) {
+        return true;
+      }
+      return false;
+    }
+  }
+
+
   let rows: any = [];
 
   users.forEach((el) => {
       rows.push({
+        online: compareIds(el._id),
         id: el._id,
         firstName: el.name,
         middlename: el.middleName,
@@ -80,10 +121,9 @@ const Users: React.FC = () => {
         login: el.login,
         email: el.email,
         phone: el.phone,
-        isApproved: el.isApproved
+        isApproved: el.isApproved,
+        avatar: el.avatar
       })
-
-      
     })
     
     const filterRows: any = rows.filter((i:any) => i.firstName.startsWith(search))
@@ -107,7 +147,6 @@ const Users: React.FC = () => {
         <TableHead>
           <TableRow>
             <StyledTableCell align="center">Nome</StyledTableCell>
-            <StyledTableCell align="center">Sobrenome</StyledTableCell>
             <StyledTableCell align="center">Atuação</StyledTableCell>
             <StyledTableCell align="center">Cargo</StyledTableCell>
             <StyledTableCell align="center">Login</StyledTableCell>
@@ -123,21 +162,32 @@ const Users: React.FC = () => {
             if(row.role !== "Developer")
             return (
               <StyledTableRow key={index}>
-                <StyledTableCell align="center" component="th" scope="row">{row.firstName}</StyledTableCell>
-                <StyledTableCell align="center">{row.middlename}</StyledTableCell>
+                <StyledTableCell align="center" component="th" scope="row">
+                  <C.ImageAvatar isOnline={row.online}>
+                    <img  src={row.avatar} alt="avatar" />
+                  </C.ImageAvatar>
+                  <span className="name-area">{row.firstName}</span> <span className="name-area">{row.middlename}</span></StyledTableCell>
                 <StyledTableCell align="center">{row.assignments}</StyledTableCell>
-                <StyledTableCell align="center">{row.role}</StyledTableCell>
+                <StyledTableCell align="center"
+                style={{
+                  color: `${
+                    row.role === "Admin" 
+                    ? "rgb(0, 255, 200)" 
+                    : row.role === "Member" 
+                    ? "rgb(255, 102, 0)" 
+                    : row.role === "Owner" 
+                    ? "rgb(30, 255, 0)" 
+                    : row.role === "Developer" 
+                    ? "rgb(255, 187, 0)" 
+                    : ""}`
+                }}>{row.role}</StyledTableCell>
                 <StyledTableCell align="center">{row.login}</StyledTableCell>
                 <StyledTableCell align="center">{row.email}</StyledTableCell>
                 <StyledTableCell align="center">{row.phone}</StyledTableCell>
                 <StyledTableCell align="center" className={row.isApproved ? 'approved' : 'waiting'}><span>{row.isApproved ? 'Aprovado' : 'Pendente'}</span></StyledTableCell>
-                <StyledTableCell align="center" sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '1rem'
-                }}>
-                  <Button variant="contained" color="info" onClick={() => navigate(`/usuarios/update/${row.id}`)}><BorderColorIcon/></Button>
-                  <Button variant="contained" color="error" onClick={() => handleRemoveUser(row.id)}><RemoveCircleOutlineIcon/></Button>
+                <StyledTableCell align="center">
+                  <Button color="info" onClick={() => navigate(`/usuarios/update/${row.id}`)}><BorderColorIcon/></Button>
+                  <Button  color="error" onClick={() => handleRemoveUser(row.id)}><RemoveCircleOutlineIcon/></Button>
                 </StyledTableCell>
   
               </StyledTableRow>

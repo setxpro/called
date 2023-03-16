@@ -9,6 +9,6 @@ export const dark = {
         tableTh: '#666',
         textTh: '#FFF',
         text: '#eee',
-        title: '#059'
+        title: '#FFF'
     }
 }

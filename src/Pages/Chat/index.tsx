@@ -74,8 +74,6 @@ const Chat = () => {
     socket.current.emit('remove-message', id);
   }
 
-
-
   return (
     <C.Container>
         <C.LeftSide selectedChat={selectedChat}>

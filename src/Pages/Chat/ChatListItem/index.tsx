@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as C from './styles'
 
 import { ChatType } from '../../../Types/ChatType';
@@ -11,11 +11,13 @@ interface Props {
     online: boolean;
 }
 
+
 const ChatListItem = ( { online, currentUserId, data }: Props) => {
 
     const [userData, setUserData] = useState<User>(null!)
     const api = useApi();
-    
+
+
     useEffect(() => {
 
         const userId = data.members.find((id) => id !== currentUserId);
@@ -35,7 +37,7 @@ const ChatListItem = ( { online, currentUserId, data }: Props) => {
   return (
     <C.Container>
         <C.ContentAvatarArea online={online}>
-            <img src={userData?.avatar} alt="avatar"/>
+            <img src={userData?.avatar ? userData?.avatar : "https://github.com/reactjs.png"} alt="avatar"/>
         </C.ContentAvatarArea>
         <C.NameArea>
             <h3>{userData?.name} {userData?.middleName}</h3>

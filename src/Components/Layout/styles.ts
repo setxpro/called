@@ -66,6 +66,19 @@ export const Container = styled.div`
         color: ${props => props.theme.colors.text};
 
     }
+
+
+    .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root  {
+
+        color: ${props => props.theme.colors.text};
+        border-radius: 0;
+
+    }
+    .css-1yk1gt9-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root  {
+        color: ${props => props.theme.colors.icons};
+    }
+    
+
 `;
 export const ContentPages = styled.div<{wrapperSidebar: boolean}>`
     position: fixed;
